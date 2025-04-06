@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - QR Attendance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-green-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">QR Attendance System - Student</h1>
+            <div>
+                <a href="#" id="logoutBtn" class="px-4 py-2 bg-white text-green-600 rounded-md">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white h-screen p-4">
+            <div class="flex items-center space-x-2 mb-8 p-2">
+                <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                    <span class="text-xl font-bold" id="userInitial">S</span>
+                </div>
+                <div>
+                    <p class="font-semibold" id="userName">Student Name</p>
+                    <p class="text-xs text-gray-400">Student</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="dashboard.html" class="flex items-center space-x-2 px-4 py-2 bg-green-700 rounded-md">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="scan-qr.html" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Scan QR</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Student Dashboard</h2>
+                <p class="text-gray-600">Welcome back, <span id="dashboardUserName">Student</span>!</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-green-600 mb-2">Today's Classes</h3>
+                    <p class="text-3xl font-bold" id="todayClasses">3</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Attendance This Month</h3>
+                    <p class="text-3xl font-bold" id="monthAttendance">92%</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-purple-600 mb-2">Pending Attendance</h3>
+                    <p class="text-3xl font-bold" id="pendingAttendance">1</p>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Attendance</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="recentAttendance">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add this to the dashboard content -->
+<div class="bg-white p-6 rounded-lg shadow-md mt-6">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Submit Attendance via Link</h3>
+    <p class="text-gray-600 mb-4">If you received an attendance link, you can submit directly here:</p>
+    
+    <div class="flex">
+        <input type="text" id="attendanceLink" placeholder="Paste attendance link here" 
+               class="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500">
+        <button id="openLinkBtn" class="px-4 py-2 bg-green-600 text-white rounded-r-md hover:bg-green-700">
+            Open
+        </button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('openLinkBtn').addEventListener('click', function() {
+        const link = document.getElementById('attendanceLink').value.trim();
+        if (link) {
+            // Check if it's a valid attendance link
+            if (link.includes('scan-attendance.html?data=')) {
+                window.location.href = link;
+            } else {
+                alert('Please enter a valid attendance link');
+            }
+        } else {
+            alert('Please paste an attendance link');
+        }
+    });
+</script>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/student.js"></script>
+</body>
+</html>

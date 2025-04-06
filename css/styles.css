@@ -1,0 +1,37 @@
+/* Additional custom styles */
+#scanRegion {
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    box-sizing: border-box;
+}
+
+/* Animation for scan region */
+@keyframes scan {
+    0% { top: 15%; }
+    100% { top: 85%; }
+}
+
+#scanRegion::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(16, 185, 129, 0.5);
+    animation: scan 2s infinite linear;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .flex {
+        flex-direction: column;
+    }
+    
+    aside {
+        width: 100%;
+        height: auto;
+    }
+}

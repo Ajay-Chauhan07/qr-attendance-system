@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan QR - QR Attendance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-green-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">QR Attendance System - Student</h1>
+            <div>
+                <a href="#" id="logoutBtn" class="px-4 py-2 bg-white text-green-600 rounded-md">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white h-screen p-4">
+            <div class="flex items-center space-x-2 mb-8 p-2">
+                <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                    <span class="text-xl font-bold" id="userInitial">S</span>
+                </div>
+                <div>
+                    <p class="font-semibold" id="userName">Student Name</p>
+                    <p class="text-xs text-gray-400">Student</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="dashboard.html" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="scan-qr.html" class="flex items-center space-x-2 px-4 py-2 bg-green-700 rounded-md">
+                            <span>Scan QR</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Scan QR Code</h2>
+                <p class="text-gray-600">Scan your professor's QR code to mark attendance</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4">
+                        <select id="cameraSelect" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">
+                            <option value="">Select Camera</option>
+                        </select>
+                    </div>
+                    
+                    <div class="relative border-4 border-gray-300 rounded-lg overflow-hidden mb-4">
+                        <video id="video" width="300" height="300" class="bg-black"></video>
+                        <canvas id="canvas" class="hidden"></canvas>
+                        <div id="scanRegion" class="absolute inset-0 border-4 border-green-500 pointer-events-none" style="display: none;"></div>
+                    </div>
+                    
+                    <button id="startScanBtn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Start Scanning
+                    </button>
+                    
+                    <button id="stopScanBtn" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 mt-4 hidden">
+                        Stop Scanning
+                    </button>
+                </div>
+                
+                <div id="scanResult" class="mt-8 hidden">
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700" id="scanSuccessMessage">
+                                    QR code scanned successfully!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Attendance Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600">Subject:</p>
+                                <p class="font-medium" id="subjectName">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Professor:</p>
+                                <p class="font-medium" id="professorName">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Class Time:</p>
+                                <p class="font-medium" id="classTime">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Valid Until:</p>
+                                <p class="font-medium" id="validUntil">-</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button id="submitAttendanceBtn" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                Submit Attendance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/student.js"></script>
+    <script src="../js/qr.js"></script>
+    <script>
+        function submitAttendance() {
+    const qrData = JSON.parse(document.getElementById('submitAttendanceBtn').getAttribute('data-qr'));
+    const studentId = localStorage.getItem('userId');
+    
+    // Redirect to the mobile-friendly page instead of showing alert
+    const attendanceUrl = generateAttendanceUrl(JSON.stringify(qrData));
+    window.location.href = attendanceUrl;
+}
+
+// Add this helper function
+function generateAttendanceUrl(data) {
+    const baseUrl = window.location.origin + window.location.pathname.replace('scan-qr.html', 'scan-attendance.html');
+    return `${baseUrl}?data=${encodeURIComponent(data)}`;
+}
+    </script>
+</body>
+</html>

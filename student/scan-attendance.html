@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Attendance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../js/auth.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <div id="loadingView" class="text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <p>Loading attendance data...</p>
+        </div>
+
+        <div id="errorView" class="hidden bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
+            <p id="errorMessage"></p>
+        </div>
+
+        <div id="attendanceForm" class="hidden">
+            <h1 class="text-2xl font-bold text-center mb-6">Submit Attendance</h1>
+            
+            <div class="bg-blue-50 p-4 rounded-md mb-6">
+                <h2 class="text-xl font-semibold" id="subjectDisplay"></h2>
+                <p class="text-gray-600">Class: <span id="classTimeDisplay"></span></p>
+                <p class="text-gray-600">Valid until: <span id="expiryDisplay"></span></p>
+            </div>
+            
+            <p class="mb-4">You are: <span class="font-semibold" id="studentIdDisplay"></span></p>
+            
+            <button id="submitBtn" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md">
+                Confirm Attendance
+            </button>
+        </div>
+
+        <div id="successView" class="hidden text-center py-8">
+            <svg class="h-16 w-16 text-green-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <h2 class="text-xl font-bold mb-2">Attendance Submitted!</h2>
+            <p class="text-gray-600 mb-4">You will receive a confirmation email shortly.</p>
+            <a href="../student/dashboard.html" class="text-blue-600 hover:underline">Return to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!checkAuth()) {
+                window.location.href = "../auth/login.html";
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+
+            if (!encodedData) {
+                showError("Invalid attendance link");
+                return;
+            }
+
+            try {
+                const qrData = JSON.parse(decodeURIComponent(encodedData));
+                processAttendance(qrData);
+            } catch (e) {
+                showError("Invalid QR code data");
+                console.error(e);
+            }
+
+            function processAttendance(qrData) {
+                // Validate data
+                if (!qrData.subject || !qrData.classTime) {
+                    showError("Invalid attendance data");
+                    return;
+                }
+
+                // Check expiry
+                const expiryTime = new Date(qrData.classTime);
+                expiryTime.setMinutes(expiryTime.getMinutes() + parseInt(qrData.duration));
+                
+                if (new Date() > expiryTime) {
+                    showError("This attendance session has expired");
+                    return;
+                }
+
+                // Show form
+                document.getElementById('loadingView').classList.add('hidden');
+                document.getElementById('attendanceForm').classList.remove('hidden');
+                
+                // Populate data
+                document.getElementById('subjectDisplay').textContent = qrData.subject;
+                document.getElementById('classTimeDisplay').textContent = new Date(qrData.classTime).toLocaleString();
+                document.getElementById('expiryDisplay').textContent = expiryTime.toLocaleString();
+                document.getElementById('studentIdDisplay').textContent = localStorage.getItem('userId');
+
+                // Handle submission
+                document.getElementById('submitBtn').addEventListener('click', function() {
+                    submitAttendance(qrData);
+                });
+            }
+
+            function submitAttendance(qrData) {
+                const btn = document.getElementById('submitBtn');
+                btn.disabled = true;
+                btn.textContent = 'Submitting...';
+
+                // Simulate API call
+                setTimeout(() => {
+                    document.getElementById('attendanceForm').classList.add('hidden');
+                    document.getElementById('successView').classList.remove('hidden');
+                    
+                    // In real app, would send to server
+                    console.log("Attendance submitted:", {
+                        studentId: localStorage.getItem('userId'),
+                        qrData: qrData,
+                        timestamp: new Date().toISOString()
+                    });
+                }, 1500);
+            }
+
+            function showError(message) {
+                document.getElementById('loadingView').classList.add('hidden');
+                document.getElementById('errorView').classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = message;
+            }
+        });
+    </script>
+</body>
+</html>

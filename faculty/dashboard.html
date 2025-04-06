@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - QR Attendance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">QR Attendance System - Faculty</h1>
+            <div>
+                <a href="#" id="logoutBtn" class="px-4 py-2 bg-white text-blue-600 rounded-md">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white h-screen p-4">
+            <div class="flex items-center space-x-2 mb-8 p-2">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span class="text-xl font-bold" id="userInitial">F</span>
+                </div>
+                <div>
+                    <p class="font-semibold" id="userName">Faculty Name</p>
+                    <p class="text-xs text-gray-400">Faculty</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="dashboard.html" class="flex items-center space-x-2 px-4 py-2 bg-blue-700 rounded-md">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="generate-qr.html" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Generate QR</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="view-attendance.html" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>View Attendance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 hover:bg-gray-700 rounded-md">
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Faculty Dashboard</h2>
+                <p class="text-gray-600">Welcome back, <span id="dashboardUserName">Faculty</span>!</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Today's Classes</h3>
+                    <p class="text-3xl font-bold" id="todayClasses">3</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-green-600 mb-2">Total Students</h3>
+                    <p class="text-3xl font-bold" id="totalStudents">120</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-purple-600 mb-2">Attendance Today</h3>
+                    <p class="text-3xl font-bold" id="attendanceToday">85%</p>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Attendance</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Present</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Absent</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="recentAttendance">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/faculty.js"></script>
+</body>
+</html>
